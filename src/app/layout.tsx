@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Finote - Income & Expense Tracker",
+  title: "Finote - Income & Expense Tracker By North",
   description: "Track your income, expenses, and financial trends with our comprehensive financial management app",
   icons: {
     icon: [

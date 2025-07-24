@@ -1,4 +1,4 @@
-# Finote - Income & Expense Tracker
+# Finote - Income & Expense Tracker By North
 
 A comprehensive financial management web application built with Next.js, TypeScript, and TailwindCSS. Track your income, expenses, and financial trends with beautiful charts and intuitive interface.
 

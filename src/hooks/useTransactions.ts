@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Transaction, TransactionFormData, TransactionFilters, SummaryStats } from '@/types/Transaction';
-import { CategoryConfig, DEFAULT_CATEGORIES } from '@/types/Category';
+import { DEFAULT_CATEGORIES } from '@/types/Category';
 import { loadSampleData } from '@/utils/sampleData';
 
 const STORAGE_KEY = 'finote_transactions';

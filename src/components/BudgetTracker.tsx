@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Transaction } from '@/types/Transaction';
+import { CategoryConfig } from '@/types/Category';
 import { useCurrency } from '@/hooks/useCurrency';
 import { Plus, Edit, Trash2, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useToastContext } from '@/hooks/useToastContext';
@@ -17,7 +18,7 @@ interface Budget {
 
 interface BudgetTrackerProps {
   transactions: Transaction[];
-  categories: { income: any[]; expense: any[] };
+  categories: CategoryConfig;
 }
 
 export default function BudgetTracker({ transactions, categories }: BudgetTrackerProps) {
@@ -73,7 +74,7 @@ export default function BudgetTracker({ transactions, categories }: BudgetTracke
         }
         setFormData({ category: '', amount: '', period: 'monthly' });
         setShowAddForm(false);
-      } catch (error) {
+      } catch {
         toast.showError(t('toast.error'), t('toast.unknownError'));
       }
     } else {
@@ -86,7 +87,7 @@ export default function BudgetTracker({ transactions, categories }: BudgetTracke
       try {
         saveBudgets(budgets.filter(b => b.id !== id));
         toast.showSuccess(t('toast.budgetDeleted'));
-      } catch (error) {
+      } catch {
         toast.showError(t('toast.error'), t('toast.unknownError'));
       }
     }
@@ -133,7 +134,7 @@ export default function BudgetTracker({ transactions, categories }: BudgetTracke
     return <CheckCircle size={16} className="text-green-600 dark:text-green-400" />;
   };
 
-  const expenseCategories = categories.expense.map(cat => typeof cat === 'string' ? cat : cat.name);
+  const expenseCategories = categories.expense.map(cat => cat.name);
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">

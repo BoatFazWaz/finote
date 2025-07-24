@@ -90,7 +90,9 @@ export const generateDemoData = (): Transaction[] => {
         type: isIncome ? 'income' : 'expense',
         category,
         description,
-        amount: Math.round(amount / 100) * 100 // Round to nearest 100
+        amount: Math.round(amount / 100) * 100, // Round to nearest 100
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
       
       transactions.push(transaction);
@@ -135,7 +137,9 @@ export const generateQuickDemoData = (): Transaction[] => {
         type: isIncome ? 'income' : 'expense',
         category,
         description,
-        amount: Math.round(amount / 50) * 50 // Round to nearest 50
+        amount: Math.round(amount / 50) * 50, // Round to nearest 50
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
       
       transactions.push(transaction);

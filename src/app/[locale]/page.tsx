@@ -3,25 +3,25 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Transaction, TransactionFormData } from '@/types/Transaction';
-import { useToastContext } from '@/hooks/useToastContext';
+import { CategoryConfig } from '@/types/Category';
 import { useTransactions } from '@/hooks/useTransactions';
+import { useToastContext } from '@/hooks/useToastContext';
+import { generateDemoData } from '@/utils/demoData';
+import { exportToCSV } from '@/utils/exportUtils';
+import { Plus, Trash2 } from 'lucide-react';
+
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import CurrencySwitcher from '@/components/CurrencySwitcher';
 import TransactionForm from '@/components/TransactionForm';
 import TransactionTable from '@/components/TransactionTable';
 import SummaryCards from '@/components/SummaryCards';
 import Charts from '@/components/Charts';
-
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import CurrencySwitcher from '@/components/CurrencySwitcher';
-import { Plus, X, Download, Settings, Trash2 } from 'lucide-react';
-import { exportToCSV } from '@/utils/exportUtils';
-import { generateDemoData, generateQuickDemoData } from '@/utils/demoData';
 import CategoryManager from '@/components/CategoryManager';
 import BudgetTracker from '@/components/BudgetTracker';
 import FinancialGoals from '@/components/FinancialGoals';
 import Analytics from '@/components/Analytics';
 
 export default function Dashboard({
-  params
 }: {
   params: Promise<{ locale: string }>;
 }) {
@@ -59,7 +59,7 @@ export default function Dashboard({
         toast.showSuccess(t('toast.transactionAdded'));
       }
       setShowForm(false);
-    } catch (error) {
+    } catch {
       toast.showError(t('toast.error'), t('toast.unknownError'));
     }
   };
@@ -69,12 +69,14 @@ export default function Dashboard({
     setShowForm(true);
   };
 
+
+
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this transaction?')) {
       try {
         deleteTransaction(id);
         toast.showSuccess(t('toast.transactionDeleted'));
-      } catch (error) {
+      } catch {
         toast.showError(t('toast.error'), t('toast.unknownError'));
       }
     }
@@ -85,7 +87,7 @@ export default function Dashboard({
     setEditingTransaction(null);
   };
 
-  const handleUpdateCategories = (newCategories: { income: any[]; expense: any[] }) => {
+  const handleUpdateCategories = (newCategories: CategoryConfig) => {
     try {
       // Update categories in localStorage
       if (typeof window !== 'undefined') {
@@ -94,7 +96,7 @@ export default function Dashboard({
         window.location.reload();
       }
       toast.showSuccess(t('toast.categoryUpdated'));
-    } catch (error) {
+    } catch {
       toast.showError(t('toast.error'), t('toast.unknownError'));
     }
   };
@@ -104,7 +106,7 @@ export default function Dashboard({
       const currentCurrency = (typeof window !== 'undefined' ? localStorage.getItem('finote_currency') : null) as 'THB' | 'USD' || 'THB';
       exportToCSV(transactions, currentCurrency);
       toast.showSuccess(t('toast.dataExported'));
-    } catch (error) {
+    } catch {
       toast.showError(t('toast.error'), t('toast.unknownError'));
     }
   };
@@ -115,7 +117,7 @@ export default function Dashboard({
       const demoData = generateDemoData();
       addMultipleTransactions(demoData, true); // true = replace all
       toast.showSuccess(t('toast.demoDataGenerated'));
-    } catch (error) {
+    } catch {
       toast.showError(t('toast.error'), t('toast.unknownError'));
     }
   };
@@ -125,7 +127,7 @@ export default function Dashboard({
       try {
         clearTransactions();
         toast.showSuccess(t('toast.dataCleared'));
-      } catch (error) {
+      } catch {
         toast.showError(t('toast.error'), t('toast.unknownError'));
       }
     }
@@ -329,7 +331,7 @@ export default function Dashboard({
                     onClick={() => setShowCategoryManager(true)}
                     className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
                   >
-                    <Settings size={16} />
+                    {/* Settings size={16} /> */}
                     {t('settings.manageCategories')}
                   </button>
                 </div>
@@ -346,7 +348,7 @@ export default function Dashboard({
                     disabled={transactions.length === 0}
                     className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   >
-                    <Download size={16} />
+                    {/* Download size={16} /> */}
                     {t('common.export')} CSV
                   </button>
                 </div>

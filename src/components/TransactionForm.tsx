@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { TransactionFormData, Transaction } from '@/types/Transaction';
-import { DEFAULT_CATEGORIES } from '@/types/Category';
+import { CategoryConfig, DEFAULT_CATEGORIES } from '@/types/Category';
 import { useCurrency } from '@/hooks/useCurrency';
 import { getCurrencySymbol } from '@/utils/currencyUtils';
 import { Plus, X } from 'lucide-react';
@@ -12,7 +12,7 @@ interface TransactionFormProps {
   onSubmit: (data: TransactionFormData) => void;
   transaction?: Transaction | null;
   onCancel?: () => void;
-  categories?: { income: any[]; expense: any[] };
+  categories?: CategoryConfig;
 }
 
 export default function TransactionForm({ 
@@ -86,7 +86,7 @@ export default function TransactionForm({
     }
   };
 
-  const currentCategories = categories[formData.type].map(cat => typeof cat === 'string' ? cat : cat.name);
+  const currentCategories = categories[formData.type].map(cat => cat.name);
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">

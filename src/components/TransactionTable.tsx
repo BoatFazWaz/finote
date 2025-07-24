@@ -22,7 +22,6 @@ export default function TransactionTable({
   onDelete,
   categories 
 }: TransactionTableProps) {
-  const t = useTranslations('transactions');
   const tMonths = useTranslations('months');
   const { formatAmount } = useCurrency();
   const [filters, setFilters] = useState<TransactionFilters>({});

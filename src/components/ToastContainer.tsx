@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import ToastItem, { Toast, ToastType } from './Toast';
+import ToastItem, { Toast } from './Toast';
 
-interface ToastContainerProps {
+interface ToastProviderProps {
   children: React.ReactNode;
 }
 
@@ -50,7 +50,7 @@ export const useToast = () => {
 
 export const ToastContext = React.createContext<ReturnType<typeof useToast> | null>(null);
 
-export const ToastProvider = ({ children }: ToastContainerProps) => {
+export const ToastProvider = ({ children }: ToastProviderProps) => {
   const toast = useToast();
 
   return (

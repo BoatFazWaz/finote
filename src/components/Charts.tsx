@@ -1,9 +1,9 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Transaction, ChartData, MonthlyData } from '@/types/Transaction';
+import { Transaction, MonthlyData } from '@/types/Transaction';
 import { useCurrency } from '@/hooks/useCurrency';
-import { format, startOfMonth, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { formatLocalizedMonth } from '@/utils/dateUtils';
 import { formatNumberShorthand } from '@/utils/numberUtils';
 import {
@@ -42,7 +42,6 @@ export default function Charts({ transactions }: ChartsProps) {
 
     transactions.forEach(transaction => {
       const monthKey = format(parseISO(transaction.date), 'yyyy-MM');
-      const monthLabel = formatLocalizedMonth(transaction.date, tMonths);
       
       if (!monthlyMap.has(monthKey)) {
         monthlyMap.set(monthKey, { income: 0, expenses: 0 });
@@ -67,7 +66,7 @@ export default function Charts({ transactions }: ChartsProps) {
   };
 
   // Prepare category data for pie chart
-  const getCategoryData = (): ChartData[] => {
+  const getCategoryData = (): { name: string; value: number }[] => {
     const categoryMap = new Map<string, number>();
 
     transactions
@@ -85,12 +84,16 @@ export default function Charts({ transactions }: ChartsProps) {
   const monthlyData = getMonthlyData();
   const categoryData = getCategoryData();
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: {
+    active?: boolean;
+    payload?: Array<{ color: string; name: string; value: number }>;
+    label?: string;
+  }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
           <p className="font-medium text-gray-900 dark:text-white">{label}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
               {entry.name}: {formatAmount(entry.value)}
             </p>

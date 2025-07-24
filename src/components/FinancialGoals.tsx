@@ -21,7 +21,8 @@ interface FinancialGoalsProps {
   transactions: Transaction[];
 }
 
-export default function FinancialGoals({ transactions }: FinancialGoalsProps) {
+export default function FinancialGoals({
+}: FinancialGoalsProps) {
   const t = useTranslations('goals');
   const toast = useToastContext();
   const { formatAmount } = useCurrency();
@@ -85,7 +86,7 @@ export default function FinancialGoals({ transactions }: FinancialGoalsProps) {
         }
         setFormData({ name: '', targetAmount: '', currentAmount: '', deadline: '', category: 'savings' });
         setShowAddForm(false);
-      } catch (error) {
+      } catch {
         toast.showError(t('toast.error'), t('toast.unknownError'));
       }
     } else {
@@ -98,7 +99,7 @@ export default function FinancialGoals({ transactions }: FinancialGoalsProps) {
       try {
         saveGoals(goals.filter(g => g.id !== id));
         toast.showSuccess(t('toast.goalDeleted'));
-      } catch (error) {
+      } catch {
         toast.showError(t('toast.error'), t('toast.unknownError'));
       }
     }
@@ -188,7 +189,7 @@ export default function FinancialGoals({ transactions }: FinancialGoalsProps) {
               
               <select
                 value={formData.category}
-                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value as any }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value as 'savings' | 'debt' | 'investment' | 'other' }))}
                 className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-600 text-gray-900 dark:text-white"
               >
                 <option value="savings">Savings</option>

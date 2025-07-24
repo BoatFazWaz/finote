@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Transaction } from '@/types/Transaction';
 import { useCurrency } from '@/hooks/useCurrency';
-import { format, subMonths, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
+import { format, subMonths } from 'date-fns';
 import { formatLocalizedMonth } from '@/utils/dateUtils';
 import { formatNumberShorthand } from '@/utils/numberUtils';
 import { TrendingUp, TrendingDown, Calendar, DollarSign, BarChart3 } from 'lucide-react';
