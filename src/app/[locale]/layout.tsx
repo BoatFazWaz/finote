@@ -1,6 +1,8 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { routing } from '../../i18n/routing';
 import { ToastProvider } from '@/components/ToastContainer';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 async function getMessagesForLocale(locale: string) {
   try {
@@ -30,6 +32,8 @@ export default async function LocaleLayout({
     <NextIntlClientProvider messages={messages} locale={locale}>
       <ToastProvider>
         {children}
+        <Analytics />
+        <SpeedInsights />
       </ToastProvider>
     </NextIntlClientProvider>
   );
