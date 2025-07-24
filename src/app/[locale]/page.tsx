@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Transaction, TransactionFormData } from '@/types/Transaction';
 import { CategoryConfig } from '@/types/Category';
@@ -20,6 +20,9 @@ import CategoryManager from '@/components/CategoryManager';
 import BudgetTracker from '@/components/BudgetTracker';
 import FinancialGoals from '@/components/FinancialGoals';
 import Analytics from '@/components/Analytics';
+import AIFinancialAssistant from '@/components/AIFinancialAssistant';
+import RecurringTransactionsDetector from '@/components/RecurringTransactionsDetector';
+import FinancialHealthScore from '@/components/FinancialHealthScore';
 
 export default function Dashboard({
 }: {
@@ -42,11 +45,49 @@ export default function Dashboard({
 
   const [showForm, setShowForm] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'transactions' | 'budgets' | 'goals' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'transactions' | 'budgets' | 'goals' | 'settings' | 'ai'>('dashboard');
   const [showCategoryManager, setShowCategoryManager] = useState(false);
+  const [budgets, setBudgets] = useState<Array<{
+    id: string;
+    category: string;
+    amount: number;
+    period: 'monthly' | 'yearly';
+    createdAt: string;
+  }>>([]);
+  const [goals, setGoals] = useState<Array<{
+    id: string;
+    name: string;
+    targetAmount: number;
+    currentAmount: number;
+    deadline: string;
+    category: 'savings' | 'debt' | 'investment' | 'other';
+    createdAt: string;
+  }>>([]);
 
   const stats = getSummaryStats();
   const categories = getCategories();
+
+  // Load budgets and goals from localStorage
+  const loadBudgetsAndGoals = () => {
+    try {
+      const savedBudgets = localStorage.getItem('finote_budgets');
+      const savedGoals = localStorage.getItem('finote_goals');
+      
+      if (savedBudgets) {
+        setBudgets(JSON.parse(savedBudgets));
+      }
+      if (savedGoals) {
+        setGoals(JSON.parse(savedGoals));
+      }
+    } catch (error) {
+      console.error('Error loading budgets and goals:', error);
+    }
+  };
+
+  // Load data on mount
+  useEffect(() => {
+    loadBudgetsAndGoals();
+  }, []);
 
   const handleSubmit = (formData: TransactionFormData) => {
     try {
@@ -231,6 +272,16 @@ export default function Dashboard({
             >
               {t('navigation.settings')}
             </button>
+            <button
+              onClick={() => setActiveTab('ai')}
+              className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap cursor-pointer ${
+                activeTab === 'ai'
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
+              }`}
+            >
+              🤖 AI Assistant
+            </button>
           </nav>
         </div>
       </div>
@@ -387,6 +438,42 @@ export default function Dashboard({
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* AI Assistant Tab */}
+        {activeTab === 'ai' && (
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* AI Financial Assistant */}
+              <AIFinancialAssistant
+                transactions={transactions}
+                budgets={budgets}
+                goals={goals}
+              />
+              
+              {/* Financial Health Score */}
+              <FinancialHealthScore
+                transactions={transactions}
+                budgets={budgets}
+                goals={goals}
+              />
+            </div>
+            
+            {/* Recurring Transactions Detector */}
+            <RecurringTransactionsDetector
+              transactions={transactions}
+              onAddTransaction={(transaction) => {
+                const formData: TransactionFormData = {
+                  date: transaction.date,
+                  type: transaction.type,
+                  category: transaction.category,
+                  description: transaction.description,
+                  amount: transaction.amount.toString()
+                };
+                addTransaction(formData);
+              }}
+            />
           </div>
         )}
 
