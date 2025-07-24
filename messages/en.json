@@ -287,5 +287,18 @@
     "validationError": "Invalid data provided",
     "networkError": "Network error occurred",
     "unknownError": "An unknown error occurred"
+  },
+  "footer": {
+    "description": "Comprehensive personal finance management app with AI Assistant for tracking income, expenses, budgets, and financial goals. Free, secure, and easy to use.",
+    "quickLinks": "Quick Links",
+    "features": "Features",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "support": "Support",
+    "contact": "Contact Us",
+    "reportBug": "Report Bug",
+    "allRightsReserved": "All rights reserved.",
+    "madeWith": "Made with",
+    "by": "by"
   }
 } 

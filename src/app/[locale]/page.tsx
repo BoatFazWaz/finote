@@ -188,9 +188,9 @@ export default function Dashboard({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700" role="banner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate">
@@ -221,7 +221,7 @@ export default function Dashboard({
       {/* Navigation Tabs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto">
+          <nav className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto" role="navigation" aria-label="Main navigation">
             <button
               onClick={() => setActiveTab('dashboard')}
               className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap cursor-pointer ${
@@ -229,6 +229,8 @@ export default function Dashboard({
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
+              aria-current={activeTab === 'dashboard' ? 'page' : undefined}
+              aria-label={`${t('navigation.dashboard')} tab`}
             >
               {t('navigation.dashboard')}
             </button>
@@ -239,6 +241,8 @@ export default function Dashboard({
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
+              aria-current={activeTab === 'transactions' ? 'page' : undefined}
+              aria-label={`${t('navigation.transactions')} tab`}
             >
               {t('navigation.transactions')}
             </button>
@@ -249,6 +253,8 @@ export default function Dashboard({
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
+              aria-current={activeTab === 'budgets' ? 'page' : undefined}
+              aria-label={`${t('navigation.budgets')} tab`}
             >
               {t('navigation.budgets')}
             </button>
@@ -259,6 +265,8 @@ export default function Dashboard({
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
+              aria-current={activeTab === 'goals' ? 'page' : undefined}
+              aria-label={`${t('navigation.goals')} tab`}
             >
               {t('navigation.goals')}
             </button>
@@ -269,6 +277,8 @@ export default function Dashboard({
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
+              aria-current={activeTab === 'settings' ? 'page' : undefined}
+              aria-label={`${t('navigation.settings')} tab`}
             >
               {t('navigation.settings')}
             </button>
@@ -279,6 +289,8 @@ export default function Dashboard({
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
+              aria-current={activeTab === 'ai' ? 'page' : undefined}
+              aria-label="AI Assistant tab"
             >
               🤖 AI Assistant
             </button>
@@ -287,13 +299,13 @@ export default function Dashboard({
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
         {/* Add Transaction Button */}
         <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
               {activeTab === 'dashboard' ? t('dashboard.title') : t('dashboard.management')}
-            </h2>
+            </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
               {activeTab === 'dashboard' 
                 ? t('dashboard.subtitle')
@@ -326,7 +338,8 @@ export default function Dashboard({
 
         {/* Dashboard Tab */}
         {activeTab === 'dashboard' && (
-          <div className="space-y-8">
+          <section className="space-y-8" aria-labelledby="dashboard-heading">
+            <h2 id="dashboard-heading" className="sr-only">Dashboard Overview</h2>
             {/* Summary Cards */}
             <SummaryCards stats={stats} />
             
@@ -335,7 +348,7 @@ export default function Dashboard({
             
             {/* Charts */}
             <Charts transactions={transactions} />
-          </div>
+          </section>
         )}
 
         {/* Transactions Tab */}
@@ -443,7 +456,8 @@ export default function Dashboard({
 
         {/* AI Assistant Tab */}
         {activeTab === 'ai' && (
-          <div className="space-y-8">
+          <section className="space-y-8" aria-labelledby="ai-assistant-heading">
+            <h2 id="ai-assistant-heading" className="sr-only">AI Financial Assistant</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* AI Financial Assistant */}
               <AIFinancialAssistant
@@ -474,7 +488,7 @@ export default function Dashboard({
                 addTransaction(formData);
               }}
             />
-          </div>
+          </section>
         )}
 
         {/* Category Manager Modal */}
