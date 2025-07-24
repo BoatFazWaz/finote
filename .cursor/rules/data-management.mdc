@@ -1,0 +1,109 @@
+# Data Management and State Patterns
+
+## Data Storage
+The application uses browser localStorage for data persistence with the following storage keys:
+
+### Storage Keys
+- `finote_transactions` - Transaction data
+- `finote_categories` - Custom category configurations
+- `finote_budgets` - Budget data
+- `finote_goals` - Financial goals data
+- `finote_currency` - User's currency preference
+
+## Core Hooks
+
+### Transaction Management
+[src/hooks/useTransactions.ts](mdc:src/hooks/useTransactions.ts) provides:
+```typescript
+const {
+  transactions,
+  loading,
+  addTransaction,
+  updateTransaction,
+  deleteTransaction,
+  clearTransactions,
+  addMultipleTransactions,
+  getSummaryStats,
+  getCategories
+} = useTransactions();
+```
+
+### Currency Management
+[src/hooks/useCurrency.ts](mdc:src/hooks/useCurrency.ts) provides:
+```typescript
+const { formatAmount, convertAmount, currency } = useCurrency();
+```
+
+### Toast Notifications
+[src/hooks/useToastContext.ts](mdc:src/hooks/useToastContext.ts) provides:
+```typescript
+const { showSuccess, showError, showWarning, showInfo } = useToastContext();
+```
+
+## Data Types
+
+### Transaction
+```typescript
+interface Transaction {
+  id: string;
+  date: string;
+  type: 'income' | 'expense';
+  category: string;
+  description: string;
+  amount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+### Category
+```typescript
+interface Category {
+  name: string;
+  color: string;
+  type: 'income' | 'expense';
+}
+```
+
+## Data Operations
+
+### Safe localStorage Access
+Always check for browser environment:
+```typescript
+if (typeof window !== 'undefined') {
+  localStorage.setItem('key', JSON.stringify(data));
+  const data = JSON.parse(localStorage.getItem('key') || '[]');
+}
+```
+
+### Error Handling
+Wrap data operations in try-catch blocks:
+```typescript
+try {
+  const data = JSON.parse(localStorage.getItem('key') || '[]');
+  // Process data
+} catch (error) {
+  console.error('Error loading data:', error);
+  // Handle error (e.g., show toast, use default data)
+}
+```
+
+### Demo Data
+Use [src/utils/demoData.ts](mdc:src/utils/demoData.ts) for generating sample data:
+```typescript
+import { generateDemoData } from '@/utils/demoData';
+const demoData = generateDemoData();
+addMultipleTransactions(demoData, true); // Replace existing data
+```
+
+## Best Practices
+- Always validate data before using it
+- Provide fallback values for missing data
+- Use TypeScript interfaces for type safety
+- Implement proper error handling with user feedback
+- Clear data when generating new demo data
+- Use consistent data structures across the application
+description:
+globs:
+alwaysApply: false
+---

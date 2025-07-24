@@ -1,0 +1,107 @@
+# Utility Functions and Helpers
+
+## Core Utility Files
+
+### Currency Utilities
+[src/utils/currencyUtils.ts](mdc:src/utils/currencyUtils.ts) provides:
+```typescript
+import { formatCurrency, convertCurrency, getCurrencySymbol } from '@/utils/currencyUtils';
+
+// Format amount with currency symbol
+const formatted = formatCurrency(1000, 'THB'); // "฿1,000.00"
+
+// Convert between currencies (hardcoded rate: 1 USD = 35 THB)
+const converted = convertCurrency(100, 'USD', 'THB'); // 3500
+
+// Get currency symbol
+const symbol = getCurrencySymbol('THB'); // "฿"
+```
+
+### Date Utilities
+[src/utils/dateUtils.ts](mdc:src/utils/dateUtils.ts) provides localized date formatting:
+```typescript
+import { formatLocalizedMonth, formatLocalizedDateFull } from '@/utils/dateUtils';
+
+const tMonths = useTranslations('months');
+const formattedMonth = formatLocalizedMonth('2024-01-01', tMonths); // "ม.ค. 2024" or "Jan 2024"
+const formattedDate = formatLocalizedDateFull('2024-01-01', tMonths); // "ม.ค. 01, 2024"
+```
+
+### Number Formatting
+[src/utils/numberUtils.ts](mdc:src/utils/numberUtils.ts) provides shorthand number formatting:
+```typescript
+import { formatNumberShorthand } from '@/utils/numberUtils';
+
+const formatted = formatNumberShorthand(1500); // "1.5K"
+const formatted2 = formatNumberShorthand(2500000); // "2.5M"
+```
+
+### Export Utilities
+[src/utils/exportUtils.ts](mdc:src/utils/exportUtils.ts) provides CSV export functionality:
+```typescript
+import { exportToCSV } from '@/utils/exportUtils';
+
+exportToCSV(transactions, 'THB'); // Exports transactions as CSV with THB formatting
+```
+
+### Demo Data
+[src/utils/demoData.ts](mdc:src/utils/demoData.ts) provides sample data generation:
+```typescript
+import { generateDemoData, generateQuickDemoData } from '@/utils/demoData';
+
+const fullDemo = generateDemoData(); // 6 months of historical data
+const quickDemo = generateQuickDemoData(); // 30 days of recent data
+```
+
+## Usage Patterns
+
+### Currency Formatting in Components
+```typescript
+import { useCurrency } from '@/hooks/useCurrency';
+
+export default function MyComponent() {
+  const { formatAmount } = useCurrency();
+  
+  return (
+    <div>
+      <span>{formatAmount(transaction.amount)}</span>
+    </div>
+  );
+}
+```
+
+### Date Formatting in Components
+```typescript
+import { formatLocalizedMonth } from '@/utils/dateUtils';
+
+export default function MyComponent() {
+  const tMonths = useTranslations('months');
+  
+  return (
+    <div>
+      <span>{formatLocalizedMonth(transaction.date, tMonths)}</span>
+    </div>
+  );
+}
+```
+
+### Number Shorthand in Charts
+```typescript
+import { formatNumberShorthand } from '@/utils/numberUtils';
+
+// In chart legends
+<span>{formatNumberShorthand(category.value)}</span>
+```
+
+## Best Practices
+- Always use the currency hook for amount formatting in components
+- Use localized date formatting for all date displays
+- Use number shorthand for chart legends and large numbers
+- Import utilities at the top of files
+- Use TypeScript for type safety in utility functions
+- Handle edge cases (null, undefined, invalid data)
+- Provide fallback values for error cases
+description:
+globs:
+alwaysApply: false
+---

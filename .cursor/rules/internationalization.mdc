@@ -1,0 +1,61 @@
+# Internationalization (i18n) Guidelines
+
+## Translation System
+The application uses `next-intl` for internationalization with Thai (th) as default and English (en) support.
+
+## Key Files
+- [messages/th.json](mdc:messages/th.json) - Thai translations
+- [messages/en.json](mdc:messages/en.json) - English translations
+- [src/i18n/request.ts](mdc:src/i18n/request.ts) - i18n configuration
+- [src/i18n/routing.ts](mdc:src/i18n/routing.ts) - Locale routing
+- [middleware.ts](mdc:middleware.ts) - Locale middleware
+
+## Usage Patterns
+
+### Component Translation
+```typescript
+import { useTranslations } from 'next-intl';
+
+export default function MyComponent() {
+  const t = useTranslations('namespace'); // e.g., 'transactions', 'settings'
+  return <div>{t('key')}</div>;
+}
+```
+
+### Multiple Namespaces
+```typescript
+const t = useTranslations('transactions');
+const tToast = useTranslations('toast'); // Separate namespace for toasts
+```
+
+### Date Formatting
+Use [src/utils/dateUtils.ts](mdc:src/utils/dateUtils.ts) for localized date formatting:
+```typescript
+import { formatLocalizedMonth } from '@/utils/dateUtils';
+const tMonths = useTranslations('months');
+const formattedDate = formatLocalizedMonth(date, tMonths);
+```
+
+## Translation Structure
+All translations follow this structure:
+```json
+{
+  "namespace": {
+    "key": "Thai translation",
+    "nested": {
+      "key": "Nested translation"
+    }
+  }
+}
+```
+
+## Best Practices
+- Always add translations to both `th.json` and `en.json`
+- Use descriptive namespace names (e.g., 'transactions', 'settings', 'toast')
+- Keep translation keys semantic and consistent
+- Use nested objects for related translations
+- Test both languages when adding new features
+description:
+globs:
+alwaysApply: false
+---

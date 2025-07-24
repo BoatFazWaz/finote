@@ -1,0 +1,93 @@
+# Component Patterns and Structure
+
+## Component Organization
+Components are organized in [src/components/](mdc:src/components/) with clear separation of concerns.
+
+## Core Components
+
+### Transaction Management
+- [TransactionForm.tsx](mdc:src/components/TransactionForm.tsx) - Add/edit transaction form
+- [TransactionTable.tsx](mdc:src/components/TransactionTable.tsx) - Transaction list with filtering
+- [CategoryBadge.tsx](mdc:src/components/CategoryBadge.tsx) - Category display with colors
+
+### Financial Features
+- [BudgetTracker.tsx](mdc:src/components/BudgetTracker.tsx) - Budget management
+- [FinancialGoals.tsx](mdc:src/components/FinancialGoals.tsx) - Goal tracking
+- [Analytics.tsx](mdc:src/components/Analytics.tsx) - Financial insights
+
+### UI Components
+- [SummaryCards.tsx](mdc:src/components/SummaryCards.tsx) - Financial summary cards
+- [Charts.tsx](mdc:src/components/Charts.tsx) - Chart visualizations
+- [CategoryManager.tsx](mdc:src/components/CategoryManager.tsx) - Category management
+
+### System Components
+- [Toast.tsx](mdc:src/components/Toast.tsx) - Toast notification item
+- [ToastContainer.tsx](mdc:src/components/ToastContainer.tsx) - Toast management
+- [CurrencySwitcher.tsx](mdc:src/components/CurrencySwitcher.tsx) - Currency selection
+- [LanguageSwitcher.tsx](mdc:src/components/LanguageSwitcher.tsx) - Language selection
+
+## Component Patterns
+
+### Standard Component Structure
+```typescript
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { useCurrency } from '@/hooks/useCurrency';
+import { useToastContext } from '@/hooks/useToastContext';
+
+interface ComponentProps {
+  // Props interface
+}
+
+export default function ComponentName({ props }: ComponentProps) {
+  const t = useTranslations('namespace');
+  const toast = useToastContext();
+  const { formatAmount } = useCurrency();
+  
+  // State and logic
+  
+  return (
+    // JSX with TailwindCSS classes
+  );
+}
+```
+
+### Toast Integration
+Always use the toast system for user feedback:
+```typescript
+const toast = useToastContext();
+
+// Success
+toast.showSuccess(t('toast.successMessage'));
+
+// Error
+toast.showError(t('toast.error'), t('toast.errorDetails'));
+```
+
+### Currency Formatting
+Use the currency hook for consistent formatting:
+```typescript
+const { formatAmount } = useCurrency();
+return <span>{formatAmount(transaction.amount)}</span>;
+```
+
+## Styling Guidelines
+- Use TailwindCSS classes for styling
+- Follow responsive design patterns (`sm:`, `lg:` prefixes)
+- Use dark mode classes (`dark:` prefix)
+- Maintain consistent spacing and colors
+- Add `cursor-pointer` to clickable elements
+
+## Best Practices
+- Always include TypeScript interfaces for props
+- Use custom hooks for shared logic
+- Implement proper error handling with toasts
+- Support both light and dark themes
+- Ensure responsive design
+- Add proper accessibility attributes
+description:
+globs:
+alwaysApply: false
+---

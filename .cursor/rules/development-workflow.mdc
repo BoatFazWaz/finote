@@ -1,0 +1,84 @@
+# Development Workflow and Common Tasks
+
+## Getting Started
+1. Install dependencies: `pnpm install`
+2. Start development server: `pnpm dev`
+3. Access application: `http://localhost:3000/th` (Thai) or `http://localhost:3000/en` (English)
+
+## Common Development Tasks
+
+### Adding New Features
+1. Create component in [src/components/](mdc:src/components/)
+2. Add TypeScript interfaces in [src/types/](mdc:src/types/)
+3. Add translations to [messages/th.json](mdc:messages/th.json) and [messages/en.json](mdc:messages/en.json)
+4. Integrate with existing hooks and utilities
+5. Add toast notifications for user feedback
+6. Test in both languages
+
+### Adding New Translations
+1. Add Thai translation to [messages/th.json](mdc:messages/th.json)
+2. Add English translation to [messages/en.json](mdc:messages/en.json)
+3. Use consistent namespace structure
+4. Test translation loading
+
+### Currency Integration
+1. Use [src/hooks/useCurrency.ts](mdc:src/hooks/useCurrency.ts) for formatting
+2. Import currency utilities from [src/utils/currencyUtils.ts](mdc:src/utils/currencyUtils.ts)
+3. Support both THB and USD display
+4. Test currency switching functionality
+
+### Data Management
+1. Use [src/hooks/useTransactions.ts](mdc:src/hooks/useTransactions.ts) for transaction operations
+2. Implement proper error handling with try-catch blocks
+3. Use toast notifications for user feedback
+4. Handle localStorage safely with browser environment checks
+
+### Chart Integration
+1. Use [src/components/Charts.tsx](mdc:src/components/Charts.tsx) as reference
+2. Implement localized date formatting
+3. Use number shorthand for large values
+4. Support currency switching with chart re-rendering
+
+## Testing Checklist
+- [ ] Feature works in Thai language
+- [ ] Feature works in English language
+- [ ] Currency switching works correctly
+- [ ] Toast notifications display properly
+- [ ] Responsive design on mobile/desktop
+- [ ] Dark mode support
+- [ ] Error handling works
+- [ ] Data persistence works
+
+## Common Issues and Solutions
+
+### Translation Not Working
+- Check namespace in `useTranslations('namespace')`
+- Verify translation keys exist in both language files
+- Ensure proper locale routing in middleware
+
+### Currency Not Updating
+- Use `useCurrency` hook for formatting
+- Add `key` prop to charts for re-rendering
+- Dispatch `currencyChanged` event when needed
+
+### Data Not Persisting
+- Check localStorage access with browser environment check
+- Implement proper error handling
+- Use try-catch blocks for JSON parsing
+
+### Toast Notifications Not Showing
+- Ensure component is wrapped in `ToastProvider`
+- Use `useToastContext()` hook
+- Check translation namespace for toast messages
+
+## File Organization
+- Components: [src/components/](mdc:src/components/)
+- Hooks: [src/hooks/](mdc:src/hooks/)
+- Types: [src/types/](mdc:src/types/)
+- Utilities: [src/utils/](mdc:src/utils/)
+- Translations: [messages/](mdc:messages/)
+- Pages: [src/app/[locale]/](mdc:src/app/[locale]/)
+description:
+globs:
+alwaysApply: false
+---
