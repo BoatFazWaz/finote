@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { TransactionFormData, Transaction } from '@/types/Transaction';
 import { CategoryConfig, DEFAULT_CATEGORIES } from '@/types/Category';
-import { useCurrency } from '@/hooks/useCurrency';
-import { getCurrencySymbol } from '@/utils/currencyUtils';
+
+
 import { Plus, X, Calendar, DollarSign, Tag, FileText } from 'lucide-react';
 
 interface TransactionFormProps {
@@ -22,7 +22,6 @@ export default function TransactionForm({
   categories = DEFAULT_CATEGORIES 
 }: TransactionFormProps) {
   const t = useTranslations('form');
-  const { currency } = useCurrency();
   
   const [formData, setFormData] = useState<TransactionFormData>({
     date: new Date().toISOString().split('T')[0],

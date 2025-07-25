@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useCurrency } from '@/hooks/useCurrency';
 import { Calculator, DollarSign, TrendingUp, TrendingDown, Info, RefreshCw } from 'lucide-react';
 
@@ -25,7 +24,6 @@ interface TaxCalculation {
 }
 
 export default function TaxCalculator() {
-  const t = useTranslations();
   const { currency, formatAmount } = useCurrency();
   const [income, setIncome] = useState<string>('');
   const [isPreTax, setIsPreTax] = useState<boolean>(true);
@@ -33,7 +31,7 @@ export default function TaxCalculator() {
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
   // Tax brackets for different currencies
-  const taxBrackets: Record<string, TaxBracket[]> = {
+  const taxBrackets = useMemo<Record<string, TaxBracket[]>>(() => ({
     THB: [
       { min: 0, max: 150000, rate: 0, description: '0% - Up to 150,000 THB' },
       { min: 150000, max: 300000, rate: 5, description: '5% - 150,001 to 300,000 THB' },
@@ -53,10 +51,10 @@ export default function TaxCalculator() {
       { min: 243725, max: 609350, rate: 35, description: '35% - $243,726 to $609,350' },
       { min: 609350, max: null, rate: 37, description: '37% - Over $609,350' }
     ]
-  };
+  }), []);
 
   // Thai tax calculation with proper progressive formula
-  const calculateThaiTax = (incomeAmount: number): TaxCalculation => {
+  const calculateThaiTax = useCallback((incomeAmount: number): TaxCalculation => {
     // Personal allowance deduction (60,000 THB for single person)
     const personalAllowance = 60000;
     const taxableIncome = Math.max(0, incomeAmount - personalAllowance);
@@ -111,9 +109,9 @@ export default function TaxCalculator() {
       effectiveTaxRate,
       brackets: bracketCalculations
     };
-  };
+  }, [taxBrackets.THB]);
 
-  const calculateTax = (incomeAmount: number): TaxCalculation => {
+  const calculateTax = useCallback((incomeAmount: number): TaxCalculation => {
     if (currency === 'THB') {
       return calculateThaiTax(incomeAmount);
     }
@@ -157,9 +155,9 @@ export default function TaxCalculator() {
       effectiveTaxRate,
       brackets: bracketCalculations
     };
-  };
+  }, [currency, calculateThaiTax, taxBrackets]);
 
-  const handleCalculate = () => {
+  const handleCalculate = useCallback(() => {
     const incomeAmount = parseFloat(income);
     if (isNaN(incomeAmount) || incomeAmount <= 0) {
       setCalculation(null);
@@ -196,7 +194,7 @@ export default function TaxCalculator() {
     }
 
     setCalculation(calculation);
-  };
+  }, [income, isPreTax, calculateTax]);
 
   const handleReset = () => {
     setIncome('');
@@ -209,7 +207,7 @@ export default function TaxCalculator() {
     if (income) {
       handleCalculate();
     }
-  }, [income, isPreTax, currency]);
+  }, [income, isPreTax, currency, handleCalculate]);
 
   return (
     <div className="card p-8">

@@ -8,7 +8,7 @@ import { useTransactions } from '@/hooks/useTransactions';
 import { useToastContext } from '@/hooks/useToastContext';
 import { generateDemoData } from '@/utils/demoData';
 import { exportToCSV } from '@/utils/exportUtils';
-import { Plus, Trash2, Sparkles, BarChart3, Target, Settings, Bot, Home, Receipt, PiggyBank, Calculator } from 'lucide-react';
+import { Plus, Trash2, Sparkles, BarChart3, Target, Settings, Bot, Home, Receipt, Calculator } from 'lucide-react';
 
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import CurrencySwitcher from '@/components/CurrencySwitcher';
@@ -101,7 +101,7 @@ export default function Dashboard({
         toast.showSuccess(t('toast.transactionAdded'));
       }
       setShowForm(false);
-    } catch (error) {
+    } catch {
       toast.showError(t('toast.error'), t('toast.unknownError'));
     }
   };
@@ -115,7 +115,7 @@ export default function Dashboard({
     try {
       deleteTransaction(id);
       toast.showSuccess(t('toast.transactionDeleted'));
-    } catch (error) {
+    } catch {
       toast.showError(t('toast.error'), t('toast.unknownError'));
     }
   };
@@ -129,7 +129,7 @@ export default function Dashboard({
     try {
       localStorage.setItem('finote_categories', JSON.stringify(newCategories));
       toast.showSuccess(t('toast.categoriesUpdated'));
-    } catch (error) {
+    } catch {
       toast.showError(t('toast.error'), t('toast.unknownError'));
     }
   };
@@ -138,7 +138,7 @@ export default function Dashboard({
     try {
       exportToCSV(transactions);
       toast.showSuccess(t('toast.dataExported'));
-    } catch (error) {
+    } catch {
       toast.showError(t('toast.error'), t('toast.unknownError'));
     }
   };
@@ -148,7 +148,7 @@ export default function Dashboard({
       const demoTransactions = generateDemoData();
       addMultipleTransactions(demoTransactions);
       toast.showSuccess(t('toast.demoDataGenerated'));
-    } catch (error) {
+    } catch {
       toast.showError(t('toast.error'), t('toast.unknownError'));
     }
   };
@@ -251,7 +251,7 @@ export default function Dashboard({
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id as any)}
+                  onClick={() => setActiveTab(item.id as 'dashboard' | 'transactions' | 'budgets' | 'goals' | 'settings' | 'ai' | 'tax')}
                   className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-3 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200 flex-shrink-0 ${
                     isActive
                       ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
