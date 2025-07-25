@@ -182,31 +182,63 @@ export default function Analytics({ transactions }: AnalyticsProps) {
         </h3>
         <div className="space-y-4">
           {monthlyTrend.map((month, index) => (
-            <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="flex items-center gap-4">
-                <div className="w-16 text-sm font-medium text-gray-900 dark:text-white">
-                  {month.month}
+            <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg">
+              {/* Mobile Layout */}
+              <div className="sm:hidden p-4">
+                <div className="mb-3">
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-white">
+                    {month.month}
+                  </h4>
                 </div>
-                <div className="flex gap-6">
-                  <div className="text-center">
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{t('income')}</p>
-                    <p className="text-sm font-medium text-green-600 dark:text-green-400">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-600 dark:text-gray-400">{t('income')}</span>
+                    <span className="text-sm font-medium text-green-600 dark:text-green-400">
                       {formatAmount(month.income)}
-                    </p>
+                    </span>
                   </div>
-                  <div className="text-center">
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{t('expenses')}</p>
-                    <p className="text-sm font-medium text-red-600 dark:text-red-400">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-600 dark:text-gray-400">{t('expenses')}</span>
+                    <span className="text-sm font-medium text-red-600 dark:text-red-400">
                       {formatAmount(month.expenses)}
-                    </p>
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-600">
+                    <span className="text-xs font-medium text-gray-600 dark:text-gray-400">{t('net')}</span>
+                    <span className={`text-sm font-medium ${month.net >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                      {month.net >= 0 ? '+' : ''}{formatAmount(month.net)}
+                    </span>
                   </div>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-xs text-gray-600 dark:text-gray-400">{t('net')}</p>
-                <p className={`text-sm font-medium ${month.net >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                  {month.net >= 0 ? '+' : ''}{formatAmount(month.net)}
-                </p>
+              
+              {/* Desktop Layout - Keep Original */}
+              <div className="hidden sm:flex items-center justify-between p-4">
+                <div className="flex items-center gap-8">
+                  <div className="w-20 text-sm font-medium text-gray-900 dark:text-white">
+                    {month.month}
+                  </div>
+                  <div className="flex gap-12">
+                    <div className="text-center min-w-[100px]">
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t('income')}</p>
+                      <p className="text-sm font-medium text-green-600 dark:text-green-400">
+                        {formatAmount(month.income)}
+                      </p>
+                    </div>
+                    <div className="text-center min-w-[100px]">
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t('expenses')}</p>
+                      <p className="text-sm font-medium text-red-600 dark:text-red-400">
+                        {formatAmount(month.expenses)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right min-w-[120px]">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t('net')}</p>
+                  <p className={`text-sm font-medium ${month.net >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                    {month.net >= 0 ? '+' : ''}{formatAmount(month.net)}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
@@ -225,26 +257,55 @@ export default function Analytics({ transactions }: AnalyticsProps) {
             </p>
           ) : (
             topCategories.map((category, index) => (
-              <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                      {index + 1}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      {category.category}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {((category.total / transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)) * 100).toFixed(1)}% {t('ofTotalExpenses')}
-                    </p>
+              <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg">
+                {/* Mobile Layout */}
+                <div className="sm:hidden p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                          {index + 1}
+                        </span>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-gray-900 dark:text-white truncate">
+                          {category.category}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                          {((category.total / transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)) * 100).toFixed(1)}% {t('ofTotalExpenses')}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right flex-shrink-0 ml-3">
+                      <p className="text-lg font-bold text-gray-900 dark:text-white">
+                        {formatNumberShorthand(category.total)}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">
-                    {formatNumberShorthand(category.total)}
-                  </p>
+                
+                {/* Desktop Layout - Keep Original */}
+                <div className="hidden sm:flex items-center justify-between p-4">
+                  <div className="flex items-center gap-6">
+                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                        {index + 1}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {category.category}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {((category.total / transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)) * 100).toFixed(1)}% {t('ofTotalExpenses')}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right min-w-[100px]">
+                    <p className="text-lg font-bold text-gray-900 dark:text-white">
+                      {formatNumberShorthand(category.total)}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))
@@ -258,12 +319,31 @@ export default function Analytics({ transactions }: AnalyticsProps) {
           {t('financialInsights')}
         </h3>
         <div className="space-y-4">
-          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-            <div className="flex items-start gap-3">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+            {/* Mobile Layout */}
+            <div className="sm:hidden p-4">
+              <div className="flex items-start gap-3">
+                <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-medium text-blue-900 dark:text-blue-100">{t('savingsPerformance')}</h4>
+                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-2 break-words">
+                    {savingsRate >= 20 ? 
+                      t('excellentSavings') :
+                      savingsRate >= 10 ?
+                      t('goodProgress') :
+                      t('increaseSavings')
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Desktop Layout - Keep Original */}
+            <div className="hidden sm:flex items-start gap-4 p-4">
               <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
               <div>
                 <h4 className="font-medium text-blue-900 dark:text-blue-100">{t('savingsPerformance')}</h4>
-                <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                <p className="text-sm text-blue-700 dark:text-blue-300 mt-2">
                   {savingsRate >= 20 ? 
                     t('excellentSavings') :
                     savingsRate >= 10 ?
@@ -275,12 +355,31 @@ export default function Analytics({ transactions }: AnalyticsProps) {
             </div>
           </div>
 
-          <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-            <div className="flex items-start gap-3">
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+            {/* Mobile Layout */}
+            <div className="sm:hidden p-4">
+              <div className="flex items-start gap-3">
+                <Calendar className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-medium text-yellow-900 dark:text-yellow-100">{t('spendingTrend')}</h4>
+                  <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-2 break-words">
+                    {recentTrend > 0 ? 
+                      t('spendingIncreased', { percentage: recentTrend.toFixed(1) }) :
+                      recentTrend < 0 ?
+                      t('spendingDecreased', { percentage: Math.abs(recentTrend).toFixed(1) }) :
+                      t('spendingStable')
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Desktop Layout - Keep Original */}
+            <div className="hidden sm:flex items-start gap-4 p-4">
               <Calendar className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
               <div>
                 <h4 className="font-medium text-yellow-900 dark:text-yellow-100">{t('spendingTrend')}</h4>
-                <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+                <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-2">
                   {recentTrend > 0 ? 
                     t('spendingIncreased', { percentage: recentTrend.toFixed(1) }) :
                     recentTrend < 0 ?
@@ -293,12 +392,29 @@ export default function Analytics({ transactions }: AnalyticsProps) {
           </div>
 
           {topCategories.length > 0 && (
-            <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-              <div className="flex items-start gap-3">
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+              {/* Mobile Layout */}
+              <div className="sm:hidden p-4">
+                <div className="flex items-start gap-3">
+                  <BarChart3 className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-medium text-green-900 dark:text-green-100">{t('topSpendingArea')}</h4>
+                    <p className="text-sm text-green-700 dark:text-green-300 mt-2 break-words">
+                      {t('topCategoryInsight', { 
+                        category: topCategories[0]?.category, 
+                        amount: formatNumberShorthand(topCategories[0]?.total || 0) 
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Desktop Layout - Keep Original */}
+              <div className="hidden sm:flex items-start gap-4 p-4">
                 <BarChart3 className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-green-900 dark:text-green-100">{t('topSpendingArea')}</h4>
-                  <p className="text-sm text-green-700 dark:text-green-300 mt-1">
+                  <p className="text-sm text-green-700 dark:text-green-300 mt-2">
                     {t('topCategoryInsight', { 
                       category: topCategories[0]?.category, 
                       amount: formatNumberShorthand(topCategories[0]?.total || 0) 

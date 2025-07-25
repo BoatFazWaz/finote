@@ -68,7 +68,7 @@ interface ToastContainerProps {
 
 const ToastContainer = ({ toasts, onRemove }: ToastContainerProps) => {
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
+    <div className="fixed bottom-4 left-4 right-4 sm:top-4 sm:right-4 sm:left-auto z-50 space-y-2">
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onRemove={onRemove} />
       ))}

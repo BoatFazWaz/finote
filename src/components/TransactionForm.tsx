@@ -6,7 +6,7 @@ import { TransactionFormData, Transaction } from '@/types/Transaction';
 import { CategoryConfig, DEFAULT_CATEGORIES } from '@/types/Category';
 import { useCurrency } from '@/hooks/useCurrency';
 import { getCurrencySymbol } from '@/utils/currencyUtils';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Calendar, DollarSign, Tag, FileText } from 'lucide-react';
 
 interface TransactionFormProps {
   onSubmit: (data: TransactionFormData) => void;
@@ -89,105 +89,131 @@ export default function TransactionForm({
   const currentCategories = categories[formData.type].map(cat => cat.name);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-          {transaction ? t('update') : t('addNewTransaction')}
-        </h2>
+    <div className="card p-8 max-w-md w-full mx-auto animate-slide-in">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            {transaction ? t('update') : t('addNewTransaction')}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">
+            {transaction ? 'Update your transaction details' : 'Add a new transaction to your records'}
+          </p>
+        </div>
         {onCancel && (
           <button
             onClick={onCancel}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer"
+            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Date */}
-          <div>
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <div className="relative">
+            <label htmlFor="date" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               {t('date')}
             </label>
-            <input
-              type="date"
-              id="date"
-              value={formData.date}
-              onChange={(e) => handleInputChange('date', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.date ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-              } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-            />
-            {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
+            <div className="relative">
+              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+              <input
+                type="date"
+                id="date"
+                value={formData.date}
+                onChange={(e) => handleInputChange('date', e.target.value)}
+                className={`input-modern w-full pl-10 ${
+                  errors.date ? 'border-red-500 focus:border-red-500' : ''
+                }`}
+              />
+            </div>
+            {errors.date && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">{errors.date}</p>}
           </div>
 
           {/* Type */}
           <div>
-            <label htmlFor="type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="type" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               {t('type')}
             </label>
-            <select
-              id="type"
-              value={formData.type}
-              onChange={(e) => handleInputChange('type', e.target.value as 'income' | 'expense')}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              <option value="expense">{t('expense')}</option>
-              <option value="income">{t('income')}</option>
-            </select>
+            <div className="relative">
+              <select
+                id="type"
+                value={formData.type}
+                onChange={(e) => handleInputChange('type', e.target.value as 'income' | 'expense')}
+                className="input-modern w-full appearance-none cursor-pointer"
+              >
+                <option value="expense">{t('expense')}</option>
+                <option value="income">{t('income')}</option>
+              </select>
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Category */}
-        <div>
-          <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <div className="relative">
+          <label htmlFor="category" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
             {t('category')}
           </label>
-          <select
-            id="category"
-            value={formData.category}
-            onChange={(e) => handleInputChange('category', e.target.value)}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.category ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-            } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-          >
-            <option value="">{t('selectCategory')}</option>
-            {currentCategories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-          {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category}</p>}
+          <div className="relative">
+            <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            <select
+              id="category"
+              value={formData.category}
+              onChange={(e) => handleInputChange('category', e.target.value)}
+              className={`input-modern w-full pl-10 appearance-none cursor-pointer ${
+                errors.category ? 'border-red-500 focus:border-red-500' : ''
+              }`}
+            >
+              <option value="">{t('selectCategory')}</option>
+              {currentCategories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+          {errors.category && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">{errors.category}</p>}
         </div>
 
         {/* Description */}
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <div className="relative">
+          <label htmlFor="description" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
             {t('description')}
           </label>
-          <input
-            type="text"
-            id="description"
-            value={formData.description}
-            onChange={(e) => handleInputChange('description', e.target.value)}
-            placeholder={t('enterDescription')}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.description ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-            } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-          />
-          {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+          <div className="relative">
+            <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            <input
+              type="text"
+              id="description"
+              value={formData.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              placeholder={t('enterDescription')}
+              className={`input-modern w-full pl-10 ${
+                errors.description ? 'border-red-500 focus:border-red-500' : ''
+              }`}
+            />
+          </div>
+          {errors.description && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">{errors.description}</p>}
         </div>
 
         {/* Amount */}
-        <div>
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <div className="relative">
+          <label htmlFor="amount" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
             {t('amount')}
           </label>
           <div className="relative">
-                            <span className="absolute left-3 top-2 text-gray-500">{getCurrencySymbol(currency)}</span>
+            <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
             <input
               type="number"
               id="amount"
@@ -196,28 +222,28 @@ export default function TransactionForm({
               placeholder={t('amountPlaceholder')}
               step="0.01"
               min="0"
-              className={`w-full pl-8 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.amount ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-              } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+              className={`input-modern w-full pl-10 ${
+                errors.amount ? 'border-red-500 focus:border-red-500' : ''
+              }`}
             />
           </div>
-          {errors.amount && <p className="text-red-500 text-sm mt-1">{errors.amount}</p>}
+          {errors.amount && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">{errors.amount}</p>}
         </div>
 
-        {/* Submit Button */}
-        <div className="flex gap-3 pt-4">
+        {/* Submit Buttons */}
+        <div className="flex gap-3 pt-6">
           <button
             type="submit"
-            className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors cursor-pointer"
+            className="btn-primary flex-1"
           >
-            <Plus size={16} />
+            <Plus size={18} />
             {transaction ? t('update') : t('submit')}
           </button>
           {onCancel && (
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors cursor-pointer"
+              className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 font-medium"
             >
               {t('cancel')}
             </button>
